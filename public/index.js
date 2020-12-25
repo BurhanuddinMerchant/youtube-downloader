@@ -10,8 +10,12 @@ const downloadContent = () => {
         "&file=" +
         fileNameValue
     )
-      .then((res) => res.json())
-      .then((json) => console.log(json))
-      .catch((e) => console.log(e));
+      .then((res) => {
+        res.json();
+        window.open(
+          "http://localhost:3000/downloads/" + fileNameValue + ".mp4"
+        );
+      })
+      .then((json) => console.log(json));
   }
 };

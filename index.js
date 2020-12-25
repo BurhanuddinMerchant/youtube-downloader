@@ -1,24 +1,28 @@
 const ytdl = require("ytdl-core");
-const ejs = require("ejs");
 const cors = require("cors");
-console.log(ytdl);
+// console.log(ytdl);
+console.log(__dirname);
 const fs = require("fs");
 const express = require("express");
-const { request } = require("https");
+const path = require("path");
 const PORT = process.env.PORT || 3000;
 const app = new express();
 app.use(cors());
 app.use(express.json());
-app.get("/download", (req, res) => {
-  console.log(req);
+
+app.use("/downloads", express.static(path.join(__dirname, "downloads")));
+app.get("/download", async (req, res) => {
+  //   console.log(req);
   const url = req.query.url;
   const filename = req.query.file;
-  ytdl(url).pipe(fs.createWriteStream("./downloads/" + filename + ".mp4"));
-  res.send({ message: "hello there " });
+  await ytdl(url).pipe(
+    fs.createWriteStream("./downloads/" + filename + ".mp4")
+  );
+  // res.sendFile("./downloads/123.mp4");
+  // res.redirect("downloads/" + filename + ".mp4");
+  res.send({ message: "hello" });
 });
+
 app.listen(PORT, () => {
   console.log("Server up on port ", PORT);
 });
-// ytdl("https://www.youtube.com/watch?v=d09-P9R5BRE&ab_channel=K-391").pipe(
-//   fs.createWriteStream("video.mp4")
-// );
